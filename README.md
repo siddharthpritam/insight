@@ -1,6 +1,6 @@
 # Insight
 
-Writings, meditations, and conversations on thought, awareness, and everyday life.
+A space to inquire together, as friends, into the nature of our psychological structure and the possibility of insight.
 
 Live at **https://insight.siddharthpritam.com**, published from the separate [siddharthpritam/insight](https://github.com/siddharthpritam/insight) repository. GitHub Pages serves the website over HTTPS; Cloudflare serves the questions backend. Existing academic, root-domain, and mail records are preserved.
 
@@ -114,7 +114,7 @@ Preview files and unconfigured builds display a disabled question form and a cle
 
 Header image: an AI-assisted panoramic extension of the misty-forest photograph supplied by the user on 3 October 2026. The original is retained as `public/assets/forest-mist.jpg` (620 × 930 pixels). The site uses `public/assets/forest-panorama.webp` (2128 × 739 pixels, about 220 KB), generated with the built-in image-generation tool and optimized as WebP. The image scales naturally to fill the header width, without cropping, stretching, or side margins. Its full generation prompt and provenance are recorded in [FOREST-IMAGE.md](FOREST-IMAGE.md). No public-domain or stock-photo license is asserted for the source photograph.
 
-The blue lotus emblem (`public/assets/blue-lotus.svg`) is original SVG artwork created for this site at the user's request, placed in a 104px square at the top right (80px on narrow screens). It does not indicate institutional affiliation. Siddharth Pritam's name appears in the footer directly above the email, alongside the small independence note. The subtitle is configured by `tagline` in `site.json`.
+The blue lotus emblem (`public/assets/blue-lotus.svg`) is original SVG artwork created for this site at the user's request, drawn on a transparent background with soft blue gradient petals, placed at the top right at 104px (80px on narrow screens). It does not indicate institutional affiliation. Siddharth Pritam's name appears in the footer directly above the email, alongside the small independence note. The subtitle is configured by `tagline` in `site.json`.
 
 Selected video: *Instant insight | Krishnamurti*, https://www.youtube.com/watch?v=HUrxA7139TU, Krishnamurti — Official Channel. The displayed date is when it was added to Insight, not the talk or upload date. Playback uses YouTube's player; a direct YouTube link remains available.
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Writings, meditations, and conversations with Siddharth Pritam.",
+  "description": "A space to inquire together into ourselves, with writings, videos, and conversation by Siddharth Pritam.",
   "engines": { "node": ">=22" },
   "scripts": {
     "build": "node scripts/build.mjs",
