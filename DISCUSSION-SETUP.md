@@ -2,7 +2,7 @@
 
 The Discussion page now has a public question form, a read-only question-and-answer list for visitors, and a separate **Write privately** email link. Only Siddharth's authenticated account can publish or edit answers. The backend also lets him hide and restore questions.
 
-**Current status (3 October 2026):** the website and questions service are deployed, and `discussion.enabled` is `true`. The public board loads the live D1 question list. Owner email-code sign-in, signed-token verification, and authenticated question loading have been verified in production. The Turnstile widget is rendering its human-verification checkbox; posting a test question and checking its owner answer remain pending that verification. Preview files never submit questions.
+**Current status (3 October 2026):** the website and questions service are deployed, and `discussion.enabled` is `true`. The public board loads the live D1 question list. Owner email-code sign-in, signed-token verification, and authenticated question loading have been verified in production. A reported posting failure, `Question posting is not configured.`, was traced to the missing runtime `TURNSTILE_SECRET_KEY` binding. The existing Insight widget's secret has now been installed on the Worker and its encrypted binding verified through Cloudflare. Posting a test question and checking its owner answer remain pending the browser's human-verification step. Preview files never submit questions.
 
 - Public board: https://insight.siddharthpritam.com/discussion/
 - Owner page: https://questions.siddharthpritam.com/admin/
@@ -10,7 +10,7 @@ The Discussion page now has a public question form, a read-only question-and-ans
 - Access team: `https://insight-siddharth.cloudflareaccess.com`
 - Access application: `Insight owner`; covers `/admin` and `/admin/*` only, with one owner-email Allow policy and email-code login.
 
-The Worker variables contain the actual Access issuer and audience, and the public website configuration contains the actual API URL and Turnstile site key. The user stored `TURNSTILE_SECRET_KEY` directly in Cloudflare. No secret is committed to this repository. Revoke the temporary Access setup token after provisioning; normal website operation and Git-based deployments do not require it.
+The Worker variables contain the actual Access issuer and audience, and the public website configuration contains the actual API URL and Turnstile site key. `TURNSTILE_SECRET_KEY` is stored as an encrypted runtime secret on `insight-questions`, and `secrets.required` in the Wrangler configuration prevents deployments that lack the binding. No secret is committed to this repository. Revoke the temporary setup token after provisioning; normal website operation and Git-based deployments do not require it.
 
 ## Automated owner-login setup
 
@@ -97,6 +97,8 @@ npx wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
 Enter the secret at the prompt, not in source code. The Worker validates Turnstile on every question, including the expected hostname and `question` action. No secret belongs in `site.json`, frontend assets, or GitHub. Public posting fails until this secret is configured.
+
+If the public form reports **Question posting is not configured.**, the deployed Worker has no nonempty `TURNSTILE_SECRET_KEY`. In Cloudflare, open **Workers & Pages → insight-questions → Settings → Variables and Secrets** and add the exact name with type **Secret**, then **Deploy**. Use the secret from the existing Insight Turnstile widget. Build variables and secrets are separate and are not available to the running Worker. The required-secret deployment check protects later Git-based deployments from silently missing this binding.
 
 ## 4. Connect the website
 
