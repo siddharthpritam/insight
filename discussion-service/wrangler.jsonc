@@ -10,8 +10,8 @@
   "vars": {
     "SITE_ORIGIN": "https://insight.siddharthpritam.com",
     "OWNER_EMAIL": "pritam.siddharth@gmail.com",
-    "ACCESS_TEAM_DOMAIN": "",
-    "ACCESS_AUD": ""
+    "ACCESS_TEAM_DOMAIN": "https://insight-siddharth.cloudflareaccess.com",
+    "ACCESS_AUD": "77ffec5f6e68ce9a4f349ab8ab0f4b34ab88a526ad8dafc72e2808ae8e7e287e"
   },
   "d1_databases": [
     {
