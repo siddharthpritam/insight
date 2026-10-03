@@ -1,0 +1,21 @@
+{
+  "name": "insight-questions",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-10-03",
+  "workers_dev": false,
+  "preview_urls": false,
+  "vars": {
+    "SITE_ORIGIN": "https://insight.siddharthpritam.com",
+    "OWNER_EMAIL": "pritam.siddharth@gmail.com",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": ""
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "insight-questions",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

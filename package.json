@@ -1,0 +1,14 @@
+{
+  "name": "insight",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Writings, meditations, and conversations with Siddharth Pritam.",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/build.mjs --drafts --output=preview",
+    "check": "node scripts/check.mjs",
+    "test": "node --test scripts/content.test.mjs"
+  }
+}

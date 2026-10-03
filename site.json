@@ -1,0 +1,14 @@
+{
+  "title": "Insight",
+  "tagline": "into the nature and structure of ourselves.",
+  "author": "Siddharth Pritam",
+  "description": "Writings, meditations, and conversations on thought, awareness, and everyday life.",
+  "url": "https://insight.siddharthpritam.com",
+  "email": "pritam.siddharth@gmail.com",
+  "discussion": {
+    "enabled": false,
+    "provider": "owner-qa",
+    "apiUrl": "",
+    "turnstileSiteKey": ""
+  }
+}
