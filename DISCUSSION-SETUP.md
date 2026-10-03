@@ -129,6 +129,10 @@ Siddharth opens https://questions.siddharthpritam.com/admin/, signs in with the 
 
 The **Write privately** link opens an email to `pritam.siddharth@gmail.com`. Those messages do not pass through the public question database and are not posted automatically. The form does not collect private email addresses.
 
+## Planned follow-up
+
+Add permanent deletion for the authenticated owner, with a clear confirmation that the question and its answer will be removed permanently. Until implemented, **Hide question** and **Restore question** remain the available moderation actions.
+
 ## Activation checks
 
 After deployment, verify reading and posting in a signed-out browser; an attempted admin request should require sign-in. Verify another account cannot enter the owner area. Sign in as Siddharth, answer a clearly labelled setup question, check that the answer appears publicly, and then hide that question. Test the private email link separately.
