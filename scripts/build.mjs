@@ -65,7 +65,7 @@ ${preview ? `<div class="preview-note">Preview${[...writings,...videos].some(ite
 <header class="site-header wrap"><div><${isHome ? 'h1' : 'div'} class="site-title"><a href="${relative(route,'/')}" aria-label="Insight home">Insight</a></${isHome ? 'h1' : 'div'}><p class="site-description">${e(site.tagline)}</p></div><img class="prajna-emblem" src="${relative(route,'/assets/blue-lotus.svg')}" width="104" height="104" alt="Prajna blue lotus emblem"></header>
 <nav class="site-nav wrap" aria-label="Main navigation">${nav}</nav>
 <main id="main">${body}</main>
-<footer class="site-footer wrap"><p class="site-note">Independent of any religion or tradition.<br>Open to every background.</p><div class="footer-contact"><p>${e(site.author)}</p><a href="${e(emailLink)}">${e(site.email)}</a></div></footer>
+<footer class="site-footer wrap"><p class="site-note">Independent of any religion or tradition.<br>Open to every background.</p><div class="footer-contact"><p>&copy; ${new Date().getFullYear()} ${e(site.author)}</p><a href="${e(emailLink)}">${e(site.email)}</a></div></footer>
 <script src="${relative(route,'/assets/video.js')}" defer></script>
 ${active === 'discussion' ? `<script src="${relative(route,'/assets/discussion.js')}" defer></script>` : ''}
 </body></html>`;
@@ -83,7 +83,7 @@ await fs.cp(path.join(root,'public'), output, {recursive:true});
 
 await writePage('/', site.title, site.description, `
 <figure class="header-image wrap"><img src="${relative('/','/assets/forest-panorama.webp')}" width="2128" height="739" fetchpriority="high" alt="A wide misty forest with layers of blue-grey evergreen trees"></figure>
-<div class="introduction wrap"><p>This space is for inquiring together, as friends, into the nature of our psychological structure, so that we may have insight into ourselves and eradicate all forms of mental suffering.</p><p>Insight is <em>in</em> + <em>sight</em>: a seeing that sees the inner workings. Such an insight shows the whole structure of what is seen in an instant, a simple yet profound perception that brings about a complete transformation of the human psyche. To have such an insight, we need a still mind.</p></div>
+<div class="introduction wrap"><p>Insight is <em>in</em> + <em>sight</em>: a seeing that sees the inner workings. Such an insight shows the whole structure of what is seen in an instant, a simple yet profound perception that brings about a complete transformation of the human psyche. To have such an insight, we need a still mind.</p></div>
 <div class="home-grid wrap">
 <section class="panel" aria-labelledby="writings-title"><h2 id="writings-title">Writings</h2><p class="section-intro">Reflections to read slowly and return to.</p>${list(writings.slice(0,1),'/', 'writings')}${writings.length > 1 ? `<p class="more-link"><a href="${relative('/','/writings/')}">All writings</a></p>` : ''}</section>
 <section class="panel" aria-labelledby="videos-title"><h2 id="videos-title">Videos</h2><p class="section-intro">Talks, meditations, and selected conversations.</p>${list(videos.slice(0,1),'/', 'videos')}${videos.length > 1 ? `<p class="more-link"><a href="${relative('/','/videos/')}">All videos</a></p>` : ''}</section>
