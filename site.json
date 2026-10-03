@@ -8,7 +8,7 @@
   "discussion": {
     "enabled": false,
     "provider": "owner-qa",
-    "apiUrl": "",
-    "turnstileSiteKey": ""
+    "apiUrl": "https://questions.siddharthpritam.com",
+    "turnstileSiteKey": "0x4AAAAAAFMuKwSHE9DAl07m"
   }
 }
