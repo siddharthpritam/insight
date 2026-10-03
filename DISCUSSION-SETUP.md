@@ -2,7 +2,24 @@
 
 The Discussion page now has a public question form, a read-only question-and-answer list for visitors, and a separate **Write privately** email link. Only Siddharth's authenticated account can publish or edit answers. The backend also lets him hide and restore questions.
 
-**Current status:** implemented and tested locally; not connected to a live service. `discussion.enabled` stays `false` until setup is complete. Preview files never submit questions.
+**Current status:** the website and questions service are deployed. The owner confirmed that the public API returns an empty question list, and that the Turnstile secret was added to the Worker. The public Site key and API origin are saved in `site.json`. Owner sign-in and live posting checks remain to be completed; `discussion.enabled` stays `false` until then. Preview files never submit questions.
+
+## Automated owner-login setup
+
+The **Set up Insight owner login** GitHub Actions workflow runs only when manually dispatched on `main`. It uses the temporary repository secret `CLOUDFLARE_ACCESS_SETUP_TOKEN`. Grant that token only these **Account** permissions, scoped to the account already hosting `insight-questions`:
+
+- Access: Apps and Policies — Edit
+- Access: Organizations, Identity Providers, and Groups — Edit
+
+The script preserves an existing Zero Trust organization, creates one only if absent, adds email-code login if needed, and creates one Access application covering `questions.siddharthpritam.com/admin` and `questions.siddharthpritam.com/admin/*`. Its single Allow policy includes only `pritam.siddharth@gmail.com`. Conflicting existing applications or policies stop setup for review; existing resources are never overwritten or deleted. No billing, DNS, Worker code, or database API is used. A subscription or account-onboarding error must be resolved in Cloudflare by the account owner.
+
+The workflow prints only the public Access team URL, application audience, and application ID. Copy the team URL and audience into the Worker variables below, deploy through the existing Cloudflare Git integration, and verify owner login before enabling public posting. Revoke the temporary token in Cloudflare and remove its GitHub secret after setup is complete.
+
+Safety checks can be run locally without credentials:
+
+```sh
+node --test scripts/setup-owner-access.test.mjs
+```
 
 ## What runs where
 
