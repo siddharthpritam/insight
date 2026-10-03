@@ -14,7 +14,7 @@
     {
       "binding": "DB",
       "database_name": "insight-questions",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "d54c272d-003b-4ac4-9380-1afd0b5f8fbf",
       "migrations_dir": "migrations"
     }
   ]

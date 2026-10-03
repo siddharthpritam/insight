@@ -1,4 +1,4 @@
-CREATE TABLE questions (
+CREATE TABLE IF NOT EXISTS questions (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL DEFAULT '',
   question TEXT NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE questions (
   CHECK (length(question) BETWEEN 10 AND 3000),
   CHECK (answer IS NULL OR length(answer) BETWEEN 1 AND 12000)
 );
-CREATE INDEX questions_public_order ON questions(hidden, created_at DESC, id DESC);
+CREATE INDEX IF NOT EXISTS questions_public_order ON questions(hidden, created_at DESC, id DESC);
