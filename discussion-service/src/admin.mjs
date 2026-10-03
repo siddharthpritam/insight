@@ -1,7 +1,9 @@
 export const adminHtml=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Answer questions — Insight</title><style>
 body{font:17px/1.6 Georgia,serif;color:#202020;background:#fff;max-width:760px;margin:48px auto;padding:0 20px}h1,h2{font-weight:400}article{border-top:1px solid #ddd;margin-top:28px;padding-top:20px}p{white-space:pre-wrap;overflow-wrap:anywhere}textarea{box-sizing:border-box;width:100%;min-height:150px;padding:12px;font:inherit;border:1px solid #bbb}button{font:inherit;padding:7px 14px;margin:12px 12px 0 0;cursor:pointer;background:#f6f8fa;border:1px solid #aebdc7;color:#244f6c}label{display:block;margin:16px 0 8px}.meta{font-size:14px;color:#626262}.notice{min-height:1.6em}button:focus-visible,textarea:focus-visible{outline:2px solid #244f6c;outline-offset:3px}</style></head><body><h1>Answer questions</h1><p>Signed-in owner area. Your answers appear publicly on Insight. Hiding a question removes it and its answer from the public board.</p><p id="status" class="notice" role="status"></p><main id="questions"></main><button id="more" type="button" hidden>Load more</button><script src="/admin/app.js" defer></script></body></html>`;
 
-function adminApp() {
+// Keep browser code as source text: serializing a bundled function with toString()
+// can capture references to Wrangler's build helpers that do not exist in browsers.
+export const adminScript = String.raw`(() => {
   const list=document.getElementById('questions'),status=document.getElementById('status'),more=document.getElementById('more');
   let cursor=null;
   const node=(tag,text,cls)=>{const el=document.createElement(tag);el.textContent=text;if(cls)el.className=cls;return el;};
@@ -31,5 +33,4 @@ function adminApp() {
     try{const data=await api('/admin/api/questions'+(cursor?'?cursor='+encodeURIComponent(cursor):''));data.questions.forEach(item=>list.append(question(item)));cursor=data.nextCursor;more.hidden=!cursor;status.textContent=list.childElementCount?'':'No questions yet.';}catch(error){status.textContent=error.message;}finally{more.disabled=false;}
   }
   more.addEventListener('click',load);load();
-}
-export const adminScript=`(${adminApp.toString()})();`;
+})();`;

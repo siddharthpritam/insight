@@ -5,7 +5,7 @@
   "engines": { "node": ">=22.13" },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "check": "wrangler deploy --dry-run --outdir build",
+    "check": "wrangler deploy --dry-run --outdir build && INSIGHT_TEST_BUNDLE=1 node --test test/*.test.mjs",
     "deploy": "wrangler deploy"
   },
   "dependencies": { "jose": "^6.1.0" },

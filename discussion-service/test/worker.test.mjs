@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
+import { runInNewContext } from 'node:vm';
 import { generateKeyPair, exportJWK, createLocalJWKSet, SignJWT } from 'jose';
-import { createWorker } from '../src/worker.mjs';
+const { createWorker } = await import(process.env.INSIGHT_TEST_BUNDLE === '1' ? '../build/worker.js' : '../src/worker.mjs');
 
 const origin = 'https://insight.example.org';
 const service = 'https://questions.insight.example.org';
@@ -117,6 +118,30 @@ test('Only a valid owner can publish, edit, hide, and restore an answer', async 
   assert.ok(page.headers.get('Content-Security-Policy').includes("frame-ancestors 'none'"));
   assert.equal(page.headers.get('Access-Control-Allow-Origin'), null);
   assert.equal((await f.admin({ operation: 'answer', answer: '', question: 'changed question' })).status, 400);
+});
+
+test('The served owner script starts in a browser without Worker bundler helpers', async t => {
+  const f = fixture(t);
+  const response = await f.request('/admin/app.js', { headers: { 'cf-access-jwt-assertion': ownerToken } });
+  assert.equal(response.status, 200);
+  const status = { textContent: '' };
+  const list = { childElementCount: 0 };
+  const more = { addEventListener(event) { assert.equal(event, 'click'); } };
+  const elements = { questions: list, status, more };
+  let requests = 0;
+  runInNewContext(await response.text(), {
+    document: { getElementById: id => elements[id] },
+    fetch: async (path, options) => {
+      requests++;
+      assert.equal(path, '/admin/api/questions');
+      assert.equal(options.credentials, 'same-origin');
+      return new Response(JSON.stringify({ questions: [], nextCursor: null }), { headers: { 'Content-Type': 'application/json' } });
+    }
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(requests, 1);
+  assert.equal(status.textContent, 'No questions yet.');
+  assert.equal(more.hidden, true);
 });
 
 test('Public pagination omits hidden questions and returns each visible question once', async t => {

@@ -21,7 +21,8 @@ function cloud({ existing = false, org = true, failure, additionalApps = [] } = 
     let result;
     if (path === '/apps' && request.method === 'GET') result = [...additionalApps, ...(existing ? [ownerApp] : [])];
     else if (path === '/organizations') {
-      if (!org && request.method === 'GET') return Response.json({ success: false }, { status: 404 });
+      if (!org && request.method === 'GET') return Response.json({ success: false, errors: [{ code: 9999, message: 'access.api.error.not_enabled: Access is not enabled.' }] }, { status: 403 });
+      if (request.method === 'POST') assert.equal(calls.at(-1).body.auth_domain, 'insight-siddharth.cloudflareaccess.com');
       result = { auth_domain: 'insight-test.cloudflareaccess.com' };
     } else if (path === '/identity_providers') result = request.method === 'POST' ? { id: idpId, type: 'onetimepin' } : existing ? [{ id: idpId, type: 'onetimepin' }] : [];
     else if (path === '/apps' && request.method === 'POST') {

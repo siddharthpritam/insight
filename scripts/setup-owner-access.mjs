@@ -42,9 +42,9 @@ export async function setupOwnerAccess({ token, fetchRemote = fetch, log = conso
       redirect: 'error',
       signal: AbortSignal.timeout(30000),
     });
-    if (allowMissing && response.status === 404) return null;
     let data;
     try { data = await response.json(); } catch { throw new Error('Cloudflare returned a non-JSON response (HTTP ' + response.status + ').'); }
+    if (allowMissing && path === '/organizations' && (response.status === 404 || (response.status === 403 && data.errors?.some(error => error.code === 9999 && error.message?.startsWith('access.api.error.not_enabled:'))))) return null;
     // Do not echo headers, secret values, or arbitrary API response text into logs.
     if (!response.ok || !data.success) {
       const codes = (data.errors || []).map(e => Number(e.code)).filter(Number.isFinite).join(',');
@@ -64,20 +64,20 @@ export async function setupOwnerAccess({ token, fetchRemote = fetch, log = conso
     throw new Error('Cloudflare returned too many pages; setup stopped without changing existing resources.');
   }
 
-  // Read all existing apps before any mutation, and preserve unrelated resources.
+  let organization = (await api('/organizations', { allowMissing: true }))?.result;
+  if (!organization) {
+    // The live API requires an explicit team hostname. No subscriptions or billing APIs.
+    organization = (await api('/organizations', { method: 'POST', body: { name: 'Insight', auth_domain: 'insight-siddharth.cloudflareaccess.com' } })).result;
+    log('Created the Insight Access organization.');
+  }
+  assert(/^[a-z0-9-]+\.cloudflareaccess\.com$/.test(organization.auth_domain || ''), 'Cloudflare did not return a valid Access team hostname.');
+
+  // Read existing apps before changing application or login-provider settings.
   const apps = await list('/apps');
   const matching = apps.filter(app => app.name === APP_NAME);
   assert(matching.length <= 1, 'More than one Insight owner application exists; review it before continuing.');
   const existing = matching[0];
   assert(!apps.some(app => app.id !== existing?.id && touchesHost(app)), 'Another Access application covers the questions hostname. Review it before continuing.');
-
-  let organization = (await api('/organizations', { allowMissing: true }))?.result;
-  if (!organization) {
-    // Cloudflare generates a unique team hostname. No subscriptions or billing APIs.
-    organization = (await api('/organizations', { method: 'POST', body: { name: 'Insight' } })).result;
-    log('Created the Insight Access organization.');
-  }
-  assert(/^[a-z0-9-]+\.cloudflareaccess\.com$/.test(organization.auth_domain || ''), 'Cloudflare did not return a valid Access team hostname.');
 
   const providers = await list('/identity_providers');
   const otpProviders = providers.filter(provider => provider.type === 'onetimepin');
