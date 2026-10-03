@@ -2,7 +2,7 @@
 
 Writings, meditations, and conversations on thought, awareness, and everyday life.
 
-Prepared for **https://insight.siddharthpritam.com** in a **separate GitHub repository**, suggested name `insight`. The academic website and WordPress site do not need to be edited. No domain, repository, or DNS change is made by these files alone.
+Live at **https://insight.siddharthpritam.com**, published from the separate [siddharthpritam/insight](https://github.com/siddharthpritam/insight) repository. GitHub Pages serves the website over HTTPS; Cloudflare serves the questions backend. Existing academic, root-domain, and mail records are preserved.
 
 ## What is included
 
@@ -13,7 +13,7 @@ Prepared for **https://insight.siddharthpritam.com** in a **separate GitHub repo
 - Automatic writing/video lists, metadata, sitemap, mobile layout, and keyboard navigation.
 - A GitHub Actions workflow that tests, builds, and deploys changes to `main`.
 - One draft reflection, *Looking without a conclusion*, visible only in previews, and one selected video: *Instant insight* by J. Krishnamurti, linked to the official YouTube upload supplied by the user.
-- A public Q&A board with visitor questions and answers restricted to Siddharth's authenticated account, plus a separate private email option. Posting is inactive until the accompanying service is deployed and connected.
+- An active public Q&A board with visitor questions and answers restricted to Siddharth's authenticated account, plus a separate private email option.
 
 ## Local preview
 
@@ -104,7 +104,9 @@ There is no signup database or automatic membership: group enquiries arrive by e
 
 Discussion has a public question form and a read-only answer list for visitors. Only Siddharth's signed-in account can publish or edit answers; he can also hide and restore questions. Visitors do not need an account. Questions appear immediately after spam verification and consent to publication. There are no visitor reply controls.
 
-The board is **not active yet**. The accompanying Cloudflare Worker, D1 database, Turnstile verification, and Access sign-in need a one-time setup described in [DISCUSSION-SETUP.md](DISCUSSION-SETUP.md). The website itself remains on GitHub Pages. The service enforces owner permissions on every admin request; this rule does not depend on hiding a button. Service dependencies are locked in `discussion-service/package-lock.json`.
+The board is **enabled**. The Cloudflare Worker, D1 database, Turnstile widget, and Access sign-in are connected. Open [the owner page](https://questions.siddharthpritam.com/admin/) and sign in with an email code sent to `pritam.siddharth@gmail.com` to answer questions. Owner sign-in and authenticated loading are verified; the production posting/answering test awaits the browser's human-verification checkbox. Deployment and maintenance details are in [DISCUSSION-SETUP.md](DISCUSSION-SETUP.md).
+
+The service enforces owner permissions on every admin request; this rule does not depend on hiding a button. Service dependencies are locked in `discussion-service/package-lock.json`. Updates to `main` deploy the static site through GitHub Actions and the service through its separate Cloudflare Git integration.
 
 Preview files and unconfigured builds display a disabled question form and a clear status message. **Write privately** opens an email to `pritam.siddharth@gmail.com`; messages do not enter the public question database or get posted automatically. No private email is collected by the public form.
 

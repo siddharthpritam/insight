@@ -2,7 +2,15 @@
 
 The Discussion page now has a public question form, a read-only question-and-answer list for visitors, and a separate **Write privately** email link. Only Siddharth's authenticated account can publish or edit answers. The backend also lets him hide and restore questions.
 
-**Current status:** the website and questions service are deployed. The owner confirmed that the public API returns an empty question list, and that the Turnstile secret was added to the Worker. The public Site key and API origin are saved in `site.json`. Owner sign-in and live posting checks remain to be completed; `discussion.enabled` stays `false` until then. Preview files never submit questions.
+**Current status (3 October 2026):** the website and questions service are deployed, and `discussion.enabled` is `true`. The public board loads the live D1 question list. Owner email-code sign-in, signed-token verification, and authenticated question loading have been verified in production. The Turnstile widget is rendering its human-verification checkbox; posting a test question and checking its owner answer remain pending that verification. Preview files never submit questions.
+
+- Public board: https://insight.siddharthpritam.com/discussion/
+- Owner page: https://questions.siddharthpritam.com/admin/
+- Owner email: `pritam.siddharth@gmail.com`
+- Access team: `https://insight-siddharth.cloudflareaccess.com`
+- Access application: `Insight owner`; covers `/admin` and `/admin/*` only, with one owner-email Allow policy and email-code login.
+
+The Worker variables contain the actual Access issuer and audience, and the public website configuration contains the actual API URL and Turnstile site key. The user stored `TURNSTILE_SECRET_KEY` directly in Cloudflare. No secret is committed to this repository. Revoke the temporary Access setup token after provisioning; normal website operation and Git-based deployments do not require it.
 
 ## Automated owner-login setup
 
@@ -111,13 +119,13 @@ npm run build
 npm run check
 ```
 
-The existing Pages workflow deploys the static site only. Backend updates require running `npm run deploy` from `discussion-service/` separately. Build previews stay disabled even when the production board is enabled.
+The existing Pages workflow deploys the static site only. The configured Cloudflare Workers Git integration deploys `main` separately, with project path `discussion-service`, build command `npm ci && npm test`, and deploy command `npx wrangler deploy`. A manual backend deployment can also be run with `npm run deploy` from `discussion-service/`. Build previews stay disabled even when the production board is enabled.
 
 ## Daily use
 
 Visitors open **Discussion**, enter a question and optional name, consent to public posting, and complete verification. Questions and answers are shared across visitors and devices. The name is self-entered, not a verified visitor identity.
 
-Siddharth opens `https://YOUR-SERVICE-HOST/admin/`, signs in, and publishes an answer beneath the relevant question. An answer can be edited. **Hide question** removes the question and answer from the public board; **Restore question** returns it. Hidden records remain in D1. There are no visitor replies, public answer editor, or automatic email notifications.
+Siddharth opens https://questions.siddharthpritam.com/admin/, signs in with the code emailed to `pritam.siddharth@gmail.com`, and publishes an answer beneath the relevant question. An answer can be edited. **Hide question** removes the question and answer from the public board; **Restore question** returns it. Hidden records remain in D1. There are no visitor replies, public answer editor, or automatic email notifications.
 
 The **Write privately** link opens an email to `pritam.siddharth@gmail.com`. Those messages do not pass through the public question database and are not posted automatically. The form does not collect private email addresses.
 
@@ -125,6 +133,8 @@ The **Write privately** link opens an email to `pritam.siddharth@gmail.com`. Tho
 
 After deployment, verify reading and posting in a signed-out browser; an attempted admin request should require sign-in. Verify another account cannot enter the owner area. Sign in as Siddharth, answer a clearly labelled setup question, check that the answer appears publicly, and then hide that question. Test the private email link separately.
 
-Local tests cover real SQLite inserts and pagination, rejected forged answer fields, Turnstile validation failures, signed-token authorization failures, owner answer updates, and hiding/restoring. The deployment bundle was also checked with Wrangler's dry run. Live Access login and production posting have not been tested yet.
+Local tests cover real SQLite inserts and pagination, rejected forged answer fields, Turnstile validation failures, signed-token authorization failures, owner answer updates, and hiding/restoring. `npm run check` creates the production bundle with Wrangler and runs the same tests against that bundle, including starting the served owner script without Worker build helpers. This catches a bundling issue found and fixed during the live deployment check.
+
+Verified in production: successful GitHub Pages and Cloudflare Workers builds, an unauthenticated owner request leading to Access sign-in, owner email-code login, authenticated question loading, the public list loading, and the Turnstile widget rendering. Pending: posting the labelled setup question, publishing its answer, checking the public answer, and hiding that test question. A different real account has not been used for a live sign-in attempt; invalid and wrong-account signed tokens are covered by automated tests.
 
 References: [Worker custom domains](https://developers.cloudflare.com/workers/configuration/routing/custom-domains/), [Access applications](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/), [Access token validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/), [Turnstile server validation](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/), [D1 migrations](https://developers.cloudflare.com/d1/reference/migrations/).
