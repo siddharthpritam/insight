@@ -6,7 +6,7 @@
   "url": "https://insight.siddharthpritam.com",
   "email": "pritam.siddharth@gmail.com",
   "discussion": {
-    "enabled": false,
+    "enabled": true,
     "provider": "owner-qa",
     "apiUrl": "https://questions.siddharthpritam.com",
     "turnstileSiteKey": "0x4AAAAAAFMuKwSHE9DAl07m"
